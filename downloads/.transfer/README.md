@@ -1,0 +1,1 @@
+Temporary Git transport base for the next signed APK. This binary is not a published download. Use the versioned APK links in ../README.md. This directory is removed when the complete update is published.
