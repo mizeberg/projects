@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">GATENOVA</string>
+    <string name="document_opening">Opening your document…</string>
+    <string name="document_rendering">Rendering page %1$d…</string>
+    <string name="document_status">%1$s · %2$d\nPage %3$d / %4$d · Saved for offline reading</string>
+    <string name="document_error">Nova couldn’t open this document. Check your connection and free storage, then try again. Saved documents still work offline.</string>
 </resources>

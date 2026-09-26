@@ -5017,3 +5017,23 @@ p {
 .stat-item p > span {
   color: #95a486;
 }
+
+.library-shortcut {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 22px;
+}
+.library-shortcut p {
+  color: #b9c7b0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+@media (max-width: 600px) {
+  .library-shortcut {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -1,5 +1,5 @@
-export type Branch =
-  "ECE" | "CSE" | "Mechanical" | "Civil" | "AIML" | "Cybersecurity";
+import { branches, paperForBranch, type Branch } from "./branches.js";
+export { branches, type Branch } from "./branches.js";
 export type Question = {
   id: string;
   prompt: string;
@@ -22,14 +22,6 @@ export type Topic = {
   example: string;
   questions: Question[];
 };
-export const branches: Branch[] = [
-  "ECE",
-  "CSE",
-  "Mechanical",
-  "Civil",
-  "AIML",
-  "Cybersecurity",
-];
 const all = branches;
 export const topics: Topic[] = [
   {
@@ -79,7 +71,7 @@ export const topics: Topic[] = [
   {
     id: "probability",
     title: "Explore Probability",
-    subject: "Engineering Mathematics",
+    subject: "General Aptitude",
     region: "Probability Peaks",
     branches: all,
     minutes: 20,
@@ -264,8 +256,53 @@ export const topics: Topic[] = [
       },
     ],
   },
+  {
+    id: "ratios",
+    title: "Reason with Ratios",
+    subject: "General Aptitude",
+    region: "Reasoning Camp",
+    branches: all,
+    minutes: 15,
+    xp: 150,
+    color: "green",
+    description: "Build the quantitative reasoning used across GATE papers.",
+    concept:
+      "A ratio compares quantities in the same units. To divide a total in the ratio a:b, split it into a+b equal parts, then allocate a parts to the first quantity and b parts to the second. A percentage is a ratio with denominator 100.",
+    formula: "First share = total × a / (a + b)",
+    example:
+      "Divide 60 study minutes between concepts and practice in a 2:3 ratio. There are 5 parts, each worth 12 minutes. Concepts receive 24 minutes and practice receives 36.",
+    questions: [
+      {
+        id: "r1",
+        prompt: "Divide 80 in the ratio 3:5. What is the smaller share?",
+        options: ["16", "30", "40", "50"],
+        correct: 1,
+        explanation:
+          "There are 3+5=8 equal parts. Each is 80/8=10, so the smaller share is 3×10=30.",
+      },
+      {
+        id: "r2",
+        prompt:
+          "A price rises from 200 to 250. What is the percentage increase?",
+        options: ["20%", "25%", "50%", "125%"],
+        correct: 1,
+        explanation:
+          "The increase is 50 relative to the original 200. (50/200)×100=25%.",
+      },
+      {
+        id: "r3",
+        prompt:
+          "Two lengths are 1 metre and 50 centimetres. What is their ratio in that order?",
+        options: ["1:50", "1:2", "2:1", "50:1"],
+        correct: 2,
+        explanation: "Convert to matching units: 100 cm : 50 cm = 2:1.",
+      },
+    ],
+  },
 ];
 export const getTopics = (branch: Branch) =>
-  topics.filter((t) => t.branches.includes(branch));
+  topics.filter((t) =>
+    t.branches.some((b) => paperForBranch(b) === paperForBranch(branch)),
+  );
 export const getTopic = (id: string) =>
   topics.find((t) => t.id === id) ?? topics[0];

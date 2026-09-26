@@ -1,4 +1,6 @@
 import {
+  lazy,
+  Suspense,
   useState,
   useEffect,
   useCallback,
@@ -79,6 +81,8 @@ import {
 } from "./lib/engine";
 import { isNativeApp, exportTextNote } from "./lib/platform";
 import { useProgress } from "./lib/store";
+import { branchLabel, type Branch } from "./lib/branches.js";
+const SyllabusLibrary = lazy(() => import("./components/SyllabusLibrary"));
 const navItems = [
   { id: "home", name: "Overview", icon: Home },
   { id: "today", name: "Today’s quests", icon: Sun },
@@ -86,6 +90,7 @@ const navItems = [
   { id: "roadmap", name: "My roadmap", icon: Route },
 ];
 const learningItems = [
+  { id: "syllabus", name: "Syllabus & library", icon: BookMarked },
   { id: "practice", name: "Practice arena", icon: Target },
   { id: "materials", name: "My materials", icon: BookOpen },
   { id: "garden", name: "Knowledge Garden", icon: Leaf },
@@ -1429,11 +1434,38 @@ export default function App() {
                       <BookOpen size={18} />
                       <p>
                         These are original learning questions, not previous-year
-                        GATE questions. Verified PYQs and full mock tests will
-                        be added with approved question sources.
+                        GATE questions. Official 2026 papers and answer keys are
+                        available in Syllabus & library. Full mock scoring is
+                        not yet included.
                       </p>
                     </div>
                   </>
+                )}
+                {view === "syllabus" && (
+                  <Suspense
+                    fallback={
+                      <p role="status">
+                        Nova is opening your syllabus library…
+                      </p>
+                    }
+                  >
+                    <SyllabusLibrary
+                      branch={state.branch}
+                      bookmarks={state.bookmarks}
+                      onBookmark={(id) =>
+                        setState((s) => ({
+                          ...s,
+                          bookmarks: s.bookmarks.includes(id)
+                            ? s.bookmarks.filter((x) => x !== id)
+                            : [...s.bookmarks, id],
+                        }))
+                      }
+                      onBranch={(branch) => {
+                        setState((s) => ({ ...s, branch }));
+                        setSelected(getTopics(branch)[0].id);
+                      }}
+                    />
+                  </Suspense>
                 )}
                 {view === "materials" && (
                   <>
@@ -1446,6 +1478,21 @@ export default function App() {
                         Create a note
                       </Button>,
                     )}
+                    <Panel className="library-shortcut">
+                      <div>
+                        <h3>Your official GATE library</h3>
+                        <p>
+                          All 2027 syllabuses, official papers, answer keys and
+                          course resources.
+                        </p>
+                      </div>
+                      <Button
+                        variant="secondary"
+                        onClick={() => navigate("syllabus")}
+                      >
+                        Explore library <ArrowRight size={16} />
+                      </Button>
+                    </Panel>
                     <label className="upload-area">
                       <Upload size={28} />
                       <h3>Bring a little knowledge with you.</h3>
@@ -2497,19 +2544,29 @@ export default function App() {
                   />
                 </label>
                 <h3>Choose your branch</h3>
-                <div className="branch-grid">
-                  {branches.map((b) => (
-                    <button
-                      className={draft.branch === b ? "selected" : ""}
-                      key={b}
-                      onClick={() => setDraft((d) => ({ ...d, branch: b }))}
-                    >
-                      <GraduationCap size={20} />
-                      {b}
-                      {draft.branch === b && <Check size={15} />}
-                    </button>
-                  ))}
-                </div>
+                <label>
+                  Branch / official paper
+                  <select
+                    value={draft.branch}
+                    onChange={(e) =>
+                      setDraft((d) => ({
+                        ...d,
+                        branch: e.target.value as Branch,
+                      }))
+                    }
+                  >
+                    {branches.map((b) => (
+                      <option key={b} value={b}>
+                        {branchLabel(b)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <p>
+                  2027 syllabus for all 30 papers. AIML maps to DA;
+                  Cybersecurity maps to CS. TF is a 2026 archive; textile
+                  learners can choose XE for 2027.
+                </p>
                 <Button onClick={() => setOnboardStep(1)}>
                   Find my direction <ArrowRight size={16} />
                 </Button>

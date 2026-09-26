@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- All content is bundled; the offline edition requests no network,
-         media-library, microphone, camera or broad storage permissions. -->
+    <!-- Network is used only for user-requested official PDF downloads. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="false"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,6 +12,7 @@
         android:theme="@style/Theme.GateNova"
         android:usesCleartextTraffic="false"
         android:supportsRtl="true">
+        <activity android:name=".DocumentActivity" android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

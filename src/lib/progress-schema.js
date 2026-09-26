@@ -1,12 +1,11 @@
+import { branches } from "./branches.js";
 const isString = (v, max) => typeof v === "string" && v.length <= max;
 export function validProgress(s) {
   if (
     !s ||
     s.version !== 1 ||
     !isString(s.name, 60) ||
-    !["ECE", "CSE", "Mechanical", "Civil", "AIML", "Cybersecurity"].includes(
-      s.branch,
-    ) ||
+    !branches.includes(s.branch) ||
     !Number.isInteger(s.target) ||
     s.target < 2026 ||
     s.target > 2040 ||

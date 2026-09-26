@@ -3,7 +3,10 @@ export const isNativeApp = import.meta.env.VITE_NATIVE_ANDROID === "true";
 
 declare global {
   interface Window {
-    GateNovaAndroid?: { exportNote(title: string, body: string): void };
+    GateNovaAndroid?: {
+      exportNote(title: string, body: string): void;
+      openResource(id: string): void;
+    };
     __gatenovaBack?: () => boolean;
   }
 }

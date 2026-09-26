@@ -2,15 +2,15 @@
 
 ## Delivery boundary
 
-Phase 1 is a responsive web application: guest exploration, secure email accounts, configurable branch selection, a persisted learning journey, lessons, question attempts, honest progress rewards, and Nova reactions. Practice, focus, roadmap, garden, and analytics extend this loop. Native distribution, verified PYQs, institution management, document RAG, external LLMs, OAuth, and subscription billing are later integrations, not simulated services.
+Phase 1 is a responsive web application: guest exploration, secure email accounts, configurable branch selection, a persisted learning journey, lessons, question attempts, honest progress rewards, and Nova reactions. Practice, focus, roadmap, garden, and analytics extend this loop. Signed Android distribution, official syllabus documents and downloaded official PYQ PDFs are now included. Institution management, document RAG, external LLMs, OAuth, and subscription billing are later integrations, not simulated services.
 
 ## Design and navigation
 
-Midnight canvas, quiet olive surfaces, emerald action color, lime progress highlights; DM Sans for UI and Space Grotesk for display. Semantic CSS custom properties, reusable Panel, Button, Progress, Nova, WorldArt, and Modal components. Desktop persistent sidebar; mobile bottom navigation. Hash-addressable views: Home, Today, Nova World, Roadmap, Practice, My Materials, Knowledge Garden, Achievements, Analytics, Profile.
+Midnight canvas, quiet olive surfaces, emerald action color, lime progress highlights; DM Sans for UI and Space Grotesk for display. Semantic CSS custom properties, reusable Panel, Button, Progress, Nova, WorldArt, and Modal components. Desktop persistent sidebar; mobile bottom navigation. Hash-addressable views: Home, Today, Nova World, Roadmap, Practice, Syllabus & Library, My Materials, Knowledge Garden, Achievements, Analytics, Profile.
 
 ## Data
 
-Branch → Subject → Topic → Lesson/Objectives/Questions is configuration in curriculum.ts. Only illustrative, authored practice content is included; it is never represented as official syllabus or actual PYQs. Progress stores completed topic IDs, attempts, sessions, preferences and timestamps. XP is derived from unique correct questions, unique completed lessons, and completed timed sessions; navigation grants no rewards. Mastery is a coarse learning indicator, not a prediction.
+Branch → Subject → Topic → Lesson/Objectives/Questions is configuration in curriculum.ts. Interactive practice uses original authored content, never represented as actual PYQs. The independent `gate-library.json` manifest supplies all official 2027 syllabus PDFs/text and 2026 paper/key metadata, with provenance and hashes; see CONTENT.md. Progress stores completed topic IDs, attempts, sessions, preferences and timestamps. XP is derived from unique correct questions, unique completed lessons, and completed timed sessions; navigation grants no rewards. Mastery is a coarse learning indicator, not a prediction.
 
 SQLite stores users, hashed passwords, expiring sessions, learning state and auth throttling. Guest state stays on the device; authenticated state belongs to a user. JSON progress is versioned and validated. A repository adapter can later normalize attempts and add classrooms, assignments, material chunks and subscriptions. No role selection in the client grants privilege.
 

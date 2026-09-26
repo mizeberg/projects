@@ -6,19 +6,19 @@ This project includes a complete installable Android package of the current GATE
 
 - App: **GATENOVA**
 - Package: `io.gatenova.app`
-- Version: `1.0.0`, Android version code `1`
+- Version: `1.1.0`, Android version code `2`
 - Minimum: Android 8.0 / API 26
 - Target: Android 16 / API 36
 - Architectures: universal (no packaged native machine-code libraries)
-- Permissions: no Internet, camera, microphone or broad storage permission
+- Permissions: Internet for user-requested official PDF downloads; no camera, microphone or broad storage permission
 - Storage: private on-device WebView storage; retained across updates signed with the same key. Uninstalling or clearing app storage removes it.
 
-The Android edition shows an on-device profile and does not offer cloud sign-in. A separately deployed backend is required before adding cloud account sync. Nova uses the authored local lesson guide; external AI, RAG, verified PYQs and a full official syllabus are not part of this release.
+The Android edition shows an on-device profile and does not offer cloud sign-in. A separately deployed backend is required before adding cloud account sync. Nova uses the authored local lesson guide; external AI and RAG are not part of this release. Version 1.1.0 adds all official 2027 syllabuses, a 2026 TF archive, and on-demand official 2026 question papers/answer keys. See [Content coverage and provenance](CONTENT.md).
 
 ## Install from GitHub
 
 1. Open the **Download GATENOVA APK** link in the repository README on your Android phone.
-2. Download **gatenova-1.0.0-android.apk**. The source ZIP is for developers and is not installable.
+2. Download **gatenova-1.1.0-android.apk**. The source ZIP is for developers and is not installable.
 3. Open the downloaded APK. If Android asks, allow **Install unknown apps** for the browser or file manager used to open it.
 4. Tap **Install**, then **Open**.
 5. Use the workspace switcher or Profile → Personalize your journey to set your name, branch, target and daily availability.
@@ -66,8 +66,8 @@ The release task refuses to use debug or unsigned signing. Increment `versionCod
 
 - `MainActivity.java` loads only signed bundled content using AndroidX `WebViewAssetLoader` at `https://appassets.androidplatform.net/assets/www/index.html`.
 - File URL access, mixed content, automatic new windows and remote embedded frames are disabled. Missing resources never fall through to a remote server.
-- One bounded native bridge exports text notes through `ACTION_CREATE_DOCUMENT`. Text import uses `ACTION_OPEN_DOCUMENT`; no broad storage access is granted.
+- A bounded native bridge opens only catalog document IDs and exports text notes through `ACTION_CREATE_DOCUMENT`. Text import uses `ACTION_OPEN_DOCUMENT`; no broad storage access is granted.
 - System status, navigation, cutout and keyboard insets are handled by the native container. Android Back first closes a dialog/menu, then returns home, then offers to close the app.
-- The release build disables WebView debugging. The Android shell caches no credentials and requests no networking permission.
+- The release build disables WebView debugging. The Android shell caches no credentials. DocumentActivity downloads only approved official HTTPS PDFs into private storage; documents never load into the privileged WebView. Downloaded PDFs work offline, and bundled syllabuses never need a connection.
 
 Implementation references: [Android local WebView content](https://developer.android.com/develop/ui/views/layout/webapps/load-local-content), [AGP 8.13 compatibility](https://developer.android.com/build/releases/past-releases/agp-8-13-0-release-notes).

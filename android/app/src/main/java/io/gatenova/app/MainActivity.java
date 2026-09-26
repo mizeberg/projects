@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-/** A permission-free shell around the app's signed, bundled learning content. */
+/** A restricted shell around the app's signed, bundled learning content. */
 public class MainActivity extends ComponentActivity {
     private static final String ORIGIN = "https://appassets.androidplatform.net";
     private static final String START_URL = ORIGIN + "/assets/www/index.html";
@@ -137,6 +137,16 @@ public class MainActivity extends ComponentActivity {
     }
 
     private final class NoteBridge {
+        @JavascriptInterface public void openResource(String id) {
+            if (id == null || !id.matches("[A-Za-z0-9_-]{1,100}")) return;
+            runOnUiThread(() -> {
+                String currentUrl = webView.getUrl();
+                if (currentUrl == null || !START_URL.equals(currentUrl.split("#", 2)[0])) return;
+                Intent intent = new Intent(MainActivity.this, DocumentActivity.class);
+                intent.putExtra("documentId", id);
+                startActivity(intent);
+            });
+        }
         @JavascriptInterface public void exportNote(String title, String body) {
             if (title == null || body == null || title.length() > 200 || body.length() > 50000) return;
             runOnUiThread(() -> {

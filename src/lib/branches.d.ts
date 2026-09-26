@@ -1,0 +1,43 @@
+export type Branch =
+  | "ECE"
+  | "CSE"
+  | "Mechanical"
+  | "Civil"
+  | "AIML"
+  | "Cybersecurity"
+  | "AE"
+  | "AG"
+  | "AR"
+  | "BM"
+  | "BT"
+  | "CE"
+  | "CH"
+  | "CS"
+  | "CY"
+  | "DA"
+  | "EC"
+  | "EE"
+  | "ES"
+  | "EY"
+  | "GE"
+  | "GG"
+  | "IN"
+  | "MA"
+  | "ME"
+  | "MN"
+  | "MT"
+  | "NM"
+  | "PE"
+  | "PH"
+  | "PI"
+  | "RA"
+  | "ST"
+  | "XE"
+  | "XH"
+  | "XL"
+  | "TF";
+export const branches: Branch[];
+export const paperNames: Record<string, string>;
+export const branchAliases: Record<string, string>;
+export function paperForBranch(branch: string): string;
+export function branchLabel(branch: string): string;
