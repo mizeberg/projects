@@ -48,3 +48,6 @@ dist/
 *.keystore
 
 *.p12
+
+# Deliberately published, signed Android download
+!/downloads/*.apk

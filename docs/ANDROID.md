@@ -17,7 +17,7 @@ The Android edition shows an on-device profile and does not offer cloud sign-in.
 
 ## Install from GitHub
 
-1. Open the repository's **Releases** page on your Android phone.
+1. Open the **Download GATENOVA APK** link in the repository README on your Android phone.
 2. Download **gatenova-1.0.0-android.apk**. The source ZIP is for developers and is not installable.
 3. Open the downloaded APK. If Android asks, allow **Install unknown apps** for the browser or file manager used to open it.
 4. Tap **Install**, then **Open**.

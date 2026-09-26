@@ -4,7 +4,9 @@
 
 ## Android app
 
-Install the signed APK from [GitHub Releases](https://github.com/mizeberg/projects/releases). The Android edition bundles the current app for offline use on Android 8.0 and newer, with a private on-device profile and note import/export. No web server is needed to use it.
+[**Download GATENOVA 1.0.0 APK**](https://raw.githubusercontent.com/mizeberg/projects/refs/heads/coderabbit/build-gatenova-learning-platform/54013167/downloads/gatenova-1.0.0-android.apk).
+
+The signed APK is published as a versioned file in the `downloads/` directory on this task’s repository branch. The Android edition bundles the current app for offline use on Android 8.0 and newer, with a private on-device profile and note import/export. No web server is needed to use it.
 
 See [Android build and installation instructions](docs/ANDROID.md) for signing, update requirements and the current release scope.
 
