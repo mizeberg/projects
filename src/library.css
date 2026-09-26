@@ -15,14 +15,14 @@
 }
 .library-hero p,
 .library-paper-heading p {
-  color: #adb9ac;
+  color: var(--secondary);
   line-height: 1.6;
   margin: 8px 0;
 }
 .library-emblem {
-  color: #d6f69e;
-  background: #233125;
-  border: 1px solid #4c6545;
+  color: var(--text);
+  background: var(--inset);
+  border: 1px solid var(--line);
   border-radius: 22px;
   width: 74px;
   height: 74px;
@@ -35,7 +35,7 @@
   align-items: center;
   gap: 10px;
   margin-left: auto;
-  color: #b9d3aa;
+  color: var(--text);
   font-size: 12px;
   line-height: 1.7;
   white-space: nowrap;
@@ -44,7 +44,7 @@
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
-  color: #bac8b5;
+  color: var(--text);
   font-size: 12px;
   margin-bottom: 24px;
 }
@@ -62,7 +62,7 @@
 .library-controls label {
   min-width: 0;
   font-size: 12px;
-  color: #b4c1ae;
+  color: var(--text);
   display: grid;
   gap: 10px;
 }
@@ -70,9 +70,9 @@
 .library-controls input {
   font: inherit;
   font-size: 14px;
-  color: #edf2e9;
-  background: #111710;
-  border: 1px solid #46523f;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--line);
   border-radius: 10px;
   padding: 13px;
   width: 100%;
@@ -104,7 +104,7 @@
 .library-tabs {
   display: flex;
   gap: 8px;
-  border-bottom: 1px solid #34412f;
+  border-bottom: 1px solid var(--elevated);
   padding: 0 0 12px;
   margin-bottom: 20px;
 }
@@ -115,15 +115,15 @@
   padding: 13px 18px;
   border-radius: 10px;
   background: none;
-  color: #bfcab9;
+  color: var(--text);
   border: 1px solid transparent;
   font: inherit;
   cursor: pointer;
 }
 .library-tabs button[aria-pressed="true"] {
-  background: #273525;
-  border-color: #5e774b;
-  color: #def5b7;
+  background: var(--inset);
+  border-color: var(--faint);
+  color: var(--text);
 }
 .syllabus-toolbar {
   display: flex;
@@ -134,7 +134,7 @@
 }
 .syllabus-toolbar p,
 .library-caption {
-  color: #b6c2b0;
+  color: var(--text);
   font-size: 13px;
   line-height: 1.7;
 }
@@ -147,8 +147,8 @@
   margin-bottom: 24px;
 }
 .syllabus-pages details {
-  border: 1px solid #364331;
-  background: #181e16;
+  border: 1px solid var(--elevated);
+  background: var(--card);
   border-radius: 14px;
   overflow: hidden;
 }
@@ -161,7 +161,7 @@
 }
 .syllabus-pages summary::after {
   content: "＋";
-  color: #c1d2b5;
+  color: var(--text);
   margin-left: auto;
 }
 .syllabus-pages details[open] summary::after {
@@ -172,12 +172,12 @@
   font-size: 12px;
   font-weight: 400;
   line-height: 1.6;
-  color: #aebaab;
+  color: var(--secondary);
   margin-top: 4px;
 }
 .syllabus-page-number {
-  color: #d6efac;
-  background: #2b3a25;
+  color: var(--text);
+  background: var(--elevated);
   padding: 11px;
   border-radius: 9px;
   font-variant-numeric: tabular-nums;
@@ -186,7 +186,7 @@
   padding: 0 24px 10px;
   font-size: 15px;
   line-height: 1.85;
-  color: #e1e7dc;
+  color: var(--text);
   overflow-wrap: anywhere;
 }
 .syllabus-text p {
@@ -195,11 +195,11 @@
 }
 .review-checkbox {
   padding: 18px 24px;
-  border-top: 1px solid #364331;
+  border-top: 1px solid var(--elevated);
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #dceccf;
+  color: var(--text);
   font-size: 14px;
   min-height: 52px;
   cursor: pointer;
@@ -207,7 +207,7 @@
 .review-checkbox input {
   width: 20px;
   height: 20px;
-  accent-color: #c6ef98;
+  accent-color: var(--text);
 }
 .resource-grid {
   display: grid;
@@ -227,7 +227,7 @@
   line-height: 1.5;
 }
 .resource-card p {
-  color: #b9c6b2;
+  color: var(--text);
   font-size: 12px;
   margin: 0 0 8px;
 }
@@ -235,9 +235,9 @@
   margin-top: auto;
 }
 .resource-type {
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 1.3px;
-  color: #c5dbb5;
+  color: var(--text);
 }
 .library-courses {
   padding: 24px 0;
@@ -247,24 +247,24 @@
   font-size: 22px;
 }
 .library-courses p {
-  color: #b8c4b2;
+  color: var(--text);
   line-height: 1.7;
   max-width: 800px;
 }
 .library-courses a {
-  color: #daefbe;
+  color: var(--text);
   display: flex;
   justify-content: space-between;
   padding: 20px 0;
-  border-bottom: 1px solid #364331;
+  border-bottom: 1px solid var(--elevated);
   text-decoration: none;
   gap: 16px;
 }
 .library-notice {
   padding: 16px 20px;
-  border-left: 3px solid #acd682;
-  background: #24311e;
-  color: #e0ebd8;
+  border-left: 3px solid var(--secondary);
+  background: var(--inset);
+  color: var(--text);
   line-height: 1.8;
   font-size: 14px;
   border-radius: 0 10px 10px 0;
@@ -274,7 +274,7 @@
   gap: 12px;
   align-items: flex-start;
   padding: 28px 0;
-  color: #acb9a5;
+  color: var(--secondary);
   font-size: 12px;
   line-height: 1.8;
 }
@@ -283,7 +283,7 @@
   margin-top: 14px;
 }
 .library-footer a {
-  color: #cee6b8;
+  color: var(--text);
   text-decoration: underline;
 }
 .library-results {
@@ -299,10 +299,10 @@
   align-items: center;
   gap: 16px;
   padding: 16px;
-  background: #1e291b;
-  border: 1px solid #37492d;
+  background: var(--inset);
+  border: 1px solid var(--elevated);
   border-radius: 10px;
-  color: #e1edd8;
+  color: var(--text);
   margin: 8px 0;
   font: inherit;
   cursor: pointer;
@@ -320,7 +320,7 @@
   margin-bottom: 22px;
 }
 .library-shortcut p {
-  color: #b9c7b0;
+  color: var(--text);
   font-size: 13px;
   line-height: 1.6;
 }

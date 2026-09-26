@@ -1,6 +1,6 @@
 # Install GATENOVA on Android
 
-1. Download **gatenova-1.1.0-android.apk** on your Android phone.
+1. Download **gatenova-1.2.0-android.apk** on your Android phone.
 2. Open it from Downloads.
 3. If prompted, allow **Install unknown apps** for the browser or file manager you are using.
 4. Tap **Install**, then **Open**.
@@ -18,7 +18,9 @@ Choose **Papers & materials** for 38 official 2026 question papers and 38 answer
 
 Interactive lessons remain a starter collection. Full worked solutions, cloud accounts, external AI/RAG and lecturer/admin services are not included. Official documents show their source and year; check the source for later amendments.
 
-If you already installed v1.0.0, open this APK and choose Update. The same signing key is used, so local progress is retained. Do not uninstall first.
+Choose Profile → Appearance for Light, Dark or System. On phones, search and Ask Nova are available in the top toolbar.
+
+If you already installed v1.0.0 or v1.1.0, open this APK and choose Update. The same signing key is used, so local progress is retained. Do not uninstall first.
 
 ## Verify your download
 

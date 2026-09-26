@@ -6,6 +6,8 @@ declare global {
     GateNovaAndroid?: {
       exportNote(title: string, body: string): void;
       openResource(id: string): void;
+      getSystemAppearance?(): "dark" | "light";
+      setAppearance?(theme: "dark" | "light"): void;
     };
     __gatenovaBack?: () => boolean;
   }

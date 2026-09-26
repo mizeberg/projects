@@ -4,7 +4,7 @@
 
 ## Android app
 
-[**Download GATENOVA 1.1.0 APK**](https://raw.githubusercontent.com/mizeberg/projects/refs/heads/coderabbit/build-gatenova-learning-platform/54013167/downloads/gatenova-1.1.0-android.apk).
+[**Download GATENOVA 1.2.0 APK**](https://raw.githubusercontent.com/mizeberg/projects/refs/heads/coderabbit/build-gatenova-learning-platform/54013167/downloads/gatenova-1.2.0-android.apk).
 
 The signed APK is published as a versioned file in the `downloads/` directory on this task’s repository branch. The Android edition bundles the current app for offline use on Android 8.0 and newer, with a private on-device profile and note import/export. No web server is needed to use it.
 

@@ -2,6 +2,9 @@ package io.gatenova.app;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.RippleDrawable;
+import android.content.res.ColorStateList;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
@@ -48,24 +51,26 @@ public class DocumentActivity extends ComponentActivity {
     private float zoom = 1;
     private String documentId;
     private JSONObject document;
+    private boolean light;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+        light = getSharedPreferences("appearance", MODE_PRIVATE).getBoolean("light", false);
         documentId = getIntent().getStringExtra("documentId");
         if (!DocumentPolicy.validId(documentId)) { finish(); return; }
         if (state != null) { pageIndex = state.getInt("page", 0); zoom = state.getFloat("zoom", 1); }
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setBackgroundColor(Color.rgb(17,23,16));
+        root.setBackgroundColor(light ? Color.rgb(245,245,247) : Color.rgb(8,9,11));
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
             Insets i = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
             view.setPadding(i.left + dp(12), i.top + dp(8), i.right + dp(12), i.bottom + dp(8));
             return WindowInsetsCompat.CONSUMED;
         });
         setContentView(root);
-        WindowCompat.getInsetsController(getWindow(), root).setAppearanceLightStatusBars(false);
-        WindowCompat.getInsetsController(getWindow(), root).setAppearanceLightNavigationBars(false);
+        WindowCompat.getInsetsController(getWindow(), root).setAppearanceLightStatusBars(light);
+        WindowCompat.getInsetsController(getWindow(), root).setAppearanceLightNavigationBars(light);
         LinearLayout heading = row(); root.addView(heading);
         Button back = button("Back", view -> finish()); heading.addView(back);
         TextView title = label("GATENOVA · Document reader", 16); heading.addView(title, new LinearLayout.LayoutParams(0,-2,1));
@@ -231,8 +236,15 @@ public class DocumentActivity extends ComponentActivity {
     private void updateStatus(String text) { if (!destroyed) runOnUiThread(() -> {if (!destroyed) status.setText(text);}); }
     private int dp(int value) { return Math.round(value*getResources().getDisplayMetrics().density); }
     private LinearLayout row() { LinearLayout view = new LinearLayout(this); view.setGravity(Gravity.CENTER_VERTICAL); return view; }
-    private TextView label(String text,int size) { TextView view = new TextView(this); view.setText(text); view.setTextSize(size); view.setTextColor(Color.rgb(220,235,209)); view.setPadding(dp(8),dp(8),dp(8),dp(8)); return view; }
-    private Button button(String text,View.OnClickListener listener) { Button view = new Button(this); view.setText(text); view.setTextSize(12); view.setMinHeight(dp(48)); view.setOnClickListener(listener); return view; }
+    private TextView label(String text,int size) { TextView view = new TextView(this); view.setText(text); view.setTextSize(size); view.setTextColor(light ? Color.rgb(29,29,31) : Color.rgb(245,245,247)); view.setPadding(dp(8),dp(8),dp(8),dp(8)); return view; }
+    private Button button(String text,View.OnClickListener listener) { Button view = new Button(this); view.setText(text); view.setTextSize(12); view.setMinHeight(dp(48)); view.setOnClickListener(listener);
+        view.setTextColor(light ? Color.rgb(0,102,204) : Color.rgb(116,182,255));
+        view.setAllCaps(false);
+        GradientDrawable background = new GradientDrawable();
+        background.setCornerRadius(dp(16));
+        background.setColor(light ? Color.rgb(230,240,252) : Color.rgb(24,43,66));
+        view.setBackground(new RippleDrawable(ColorStateList.valueOf(Color.argb(40,0,113,227)), background, null));
+        return view; }
     @Override public void onSaveInstanceState(Bundle state) { state.putInt("page",pageIndex); state.putFloat("zoom",zoom); super.onSaveInstanceState(state); }
     @Override protected void onDestroy() {
         destroyed = true;

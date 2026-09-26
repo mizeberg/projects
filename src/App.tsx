@@ -8,6 +8,7 @@ import {
   type FormEvent,
 } from "react";
 import {
+  Moon,
   Home,
   Sun,
   Map,
@@ -82,6 +83,8 @@ import {
 import { isNativeApp, exportTextNote } from "./lib/platform";
 import { useProgress } from "./lib/store";
 import { branchLabel, type Branch } from "./lib/branches.js";
+import { useAppearance } from "./lib/appearance";
+import { AppearancePicker } from "./components/AppearancePicker";
 const SyllabusLibrary = lazy(() => import("./components/SyllabusLibrary"));
 const navItems = [
   { id: "home", name: "Overview", icon: Home },
@@ -119,6 +122,7 @@ function initialView() {
   return allViews.some((n) => n.id === v) ? v : "home";
 }
 export default function App() {
+  const { appearance, setAppearance, resolved } = useAppearance();
   const {
     state,
     setState,
@@ -650,7 +654,9 @@ export default function App() {
           />
         )}
         <div className="app-content" inert={isMobile && mobileMenu}>
-          <header className="topbar">
+          <header
+            className={`topbar ${searchOpen ? "topbar-search-open" : ""}`}
+          >
             <div className="breadcrumb">
               <button
                 className="icon-button mobile-menu"
@@ -666,6 +672,39 @@ export default function App() {
               </strong>
             </div>
             <div className="topbar-actions">
+              <button
+                className="icon-button mobile-search-trigger"
+                aria-label={searchOpen ? "Close search" : "Open search"}
+                aria-expanded={searchOpen}
+                onClick={() => {
+                  setSearchOpen((v) => !v);
+                  if (!searchOpen)
+                    requestAnimationFrame(() =>
+                      document
+                        .querySelector<HTMLInputElement>(".search-wrap input")
+                        ?.focus(),
+                    );
+                }}
+              >
+                <Search size={19} />
+              </button>
+              <button
+                className="topbar-nova"
+                onClick={() => askNova()}
+                aria-label="Ask Nova"
+              >
+                <Sparkles size={17} />
+                <span>Ask Nova</span>
+              </button>
+              <button
+                className="icon-button appearance-toggle"
+                aria-label={`Switch to ${resolved === "dark" ? "light" : "dark"} appearance`}
+                onClick={() =>
+                  setAppearance(resolved === "dark" ? "light" : "dark")
+                }
+              >
+                {resolved === "dark" ? <Sun size={19} /> : <Moon size={19} />}
+              </button>
               <div className="search-wrap">
                 <Search size={16} />
                 <input
@@ -780,9 +819,9 @@ export default function App() {
                 {view === "home" && (
                   <>
                     {pageHeader(
-                      "A LITTLE PROGRESS. A WORLD OF POSSIBILITY.",
-                      `Let’s make today count, ${state.name}.`,
-                      "Your next chapter starts with one small quest.",
+                      `WELCOME BACK, ${state.name.toUpperCase()}`,
+                      "Your next chapter.",
+                      "A little focus today. A little closer to your future.",
                       <div className="date-chip">
                         <CalendarDays size={16} />
                         {new Date().toLocaleDateString("en-US", {
@@ -796,28 +835,26 @@ export default function App() {
                       <div className="hero-grid" />
                       <div className="hero-copy">
                         <div className="hero-label">
-                          <span /> YOUR JOURNEY, GAMIFIED
+                          <span /> YOUR DAILY MOMENTUM
                         </div>
                         <h2>
-                          Big dreams.
+                          Small steps.
                           <br />
-                          Small quests.
-                          <br />
-                          <span>Limitless you.</span>
+                          <span>Extraordinary you.</span>
                         </h2>
                         <p>
-                          Every concept you conquer brings your
-                          <br className="desktop-break" /> GATE dream a little
-                          closer. Ready to explore?
+                          Make room for your next discovery.
+                          <br className="desktop-break" /> Nova will be right
+                          here with you.
                         </p>
                         <Button onClick={() => startQuest(nextTopic)}>
-                          Continue your journey <ArrowRight size={17} />
+                          Start your next quest <ArrowRight size={17} />
                         </Button>
                         <div className="hero-footnote">
                           <span className="mini-avatar">
                             <Nova size={25} />
                           </span>{" "}
-                          A world of knowledge. A companion for every step.
+                          Your pace. Your path. Your Nova.
                         </div>
                       </div>
                       <WorldArt />
@@ -1480,7 +1517,7 @@ export default function App() {
                     )}
                     <Panel className="library-shortcut">
                       <div>
-                        <h3>Your official GATE library</h3>
+                        <h2>Your official GATE library</h2>
                         <p>
                           All 2027 syllabuses, official papers, answer keys and
                           course resources.
@@ -1800,6 +1837,10 @@ export default function App() {
                       "A space that feels like you.",
                       "Personalize your path, meet your companion, and manage your account.",
                     )}
+                    <AppearancePicker
+                      value={appearance}
+                      onChange={setAppearance}
+                    />
                     <div className="two-column">
                       <Panel className="profile-panel">
                         <div className="profile-identity">
@@ -2113,6 +2154,7 @@ export default function App() {
               <button
                 key={n.id}
                 className={view === n.id ? "active" : ""}
+                aria-current={view === n.id ? "page" : undefined}
                 onClick={() => navigate(n.id)}
               >
                 <n.icon size={20} />

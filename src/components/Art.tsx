@@ -150,6 +150,7 @@ export function WorldArt({ large = false }: { large?: boolean }) {
         </filter>
       </defs>
       <ellipse
+        className="world-ground-shadow"
         cx="363"
         cy="327"
         rx="175"

@@ -6,7 +6,7 @@ This project includes a complete installable Android package of the current GATE
 
 - App: **GATENOVA**
 - Package: `io.gatenova.app`
-- Version: `1.1.0`, Android version code `2`
+- Version: `1.2.0`, Android version code `3`
 - Minimum: Android 8.0 / API 26
 - Target: Android 16 / API 36
 - Architectures: universal (no packaged native machine-code libraries)
@@ -18,7 +18,7 @@ The Android edition shows an on-device profile and does not offer cloud sign-in.
 ## Install from GitHub
 
 1. Open the **Download GATENOVA APK** link in the repository README on your Android phone.
-2. Download **gatenova-1.1.0-android.apk**. The source ZIP is for developers and is not installable.
+2. Download **gatenova-1.2.0-android.apk**. The source ZIP is for developers and is not installable.
 3. Open the downloaded APK. If Android asks, allow **Install unknown apps** for the browser or file manager used to open it.
 4. Tap **Install**, then **Open**.
 5. Use the workspace switcher or Profile → Personalize your journey to set your name, branch, target and daily availability.
@@ -61,6 +61,10 @@ GATENOVA_SIGNING_PROPERTIES=/private/path/signing.properties npm run android:rel
 ```
 
 The release task refuses to use debug or unsigned signing. Increment `versionCode` for every published update and update `versionName`, the APK filename and release notes together. A Play Store upload is a separate process and requires an Android App Bundle and Play Console setup; this task distributes a signed APK directly through GitHub.
+
+## Appearance
+
+Version 1.2.0 adds Light, Dark and System appearance in Profile. The native container and PDF reader use the selected appearance. System mode follows the device configuration, including changes while the app is open. Appearance is separate from learning progress and defaults to Dark.
 
 ## Native boundaries
 

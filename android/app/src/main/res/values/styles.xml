@@ -2,9 +2,9 @@
     <style name="Theme.GateNova" parent="android:style/Theme.Material.NoActionBar">
         <item name="android:fontFamily">sans</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:statusBarColor">#101310</item>
-        <item name="android:navigationBarColor">#101310</item>
-        <item name="android:windowBackground">#101310</item>
-        <item name="android:colorAccent">#BBDDA2</item>
+        <item name="android:statusBarColor">#08090B</item>
+        <item name="android:navigationBarColor">#08090B</item>
+        <item name="android:windowBackground">#08090B</item>
+        <item name="android:colorAccent">#0071E3</item>
     </style>
 </resources>

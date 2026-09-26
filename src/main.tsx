@@ -3,6 +3,9 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./fonts.css";
 import "./styles.css";
+import "./theme.css";
+import { applyAppearance, readAppearance } from "./lib/appearance";
+applyAppearance(readAppearance());
 import { isNativeApp } from "./lib/platform";
 class ErrorBoundary extends React.Component<
   { children: React.ReactNode },

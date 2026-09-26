@@ -6,7 +6,7 @@ Phase 1 is a responsive web application: guest exploration, secure email account
 
 ## Design and navigation
 
-Midnight canvas, quiet olive surfaces, emerald action color, lime progress highlights; DM Sans for UI and Space Grotesk for display. Semantic CSS custom properties, reusable Panel, Button, Progress, Nova, WorldArt, and Modal components. Desktop persistent sidebar; mobile bottom navigation. Hash-addressable views: Home, Today, Nova World, Roadmap, Practice, Syllabus & Library, My Materials, Knowledge Garden, Achievements, Analytics, Profile.
+Graphite dark and porcelain light palettes, blue primary actions, restrained semantic accents and a system-first sans-serif stack with bundled DM Sans fallback. Profile offers persistent Light, Dark and System appearance. Shared semantic tokens in `src/theme.css` cover the app and lazy-loaded library; reduced-motion preferences are respected. Semantic CSS custom properties, reusable Panel, Button, Progress, Nova, WorldArt, and Modal components. Desktop persistent sidebar; mobile bottom navigation. Hash-addressable views: Home, Today, Nova World, Roadmap, Practice, Syllabus & Library, My Materials, Knowledge Garden, Achievements, Analytics, Profile.
 
 ## Data
 

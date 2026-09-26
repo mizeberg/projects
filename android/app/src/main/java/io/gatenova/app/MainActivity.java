@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ public class MainActivity extends ComponentActivity {
     private static final int OPEN_NOTE = 1001;
     private static final int SAVE_NOTE = 1002;
     private WebView webView;
+    private FrameLayout root;
     private ValueCallback<Uri[]> fileCallback;
     private String pendingExport;
 
@@ -43,8 +45,8 @@ public class MainActivity extends ComponentActivity {
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        FrameLayout root = new FrameLayout(this);
-        root.setBackgroundColor(Color.rgb(16,19,16));
+        root = new FrameLayout(this);
+        root.setBackgroundColor(Color.rgb(8,9,11));
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()
                     | WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.ime());
@@ -52,7 +54,7 @@ public class MainActivity extends ComponentActivity {
             return WindowInsetsCompat.CONSUMED;
         });
         webView = new WebView(this);
-        webView.setBackgroundColor(Color.rgb(16,19,16));
+        webView.setBackgroundColor(Color.rgb(8,9,11));
         root.addView(webView, new FrameLayout.LayoutParams(-1,-1));
         setContentView(root);
         WindowCompat.getInsetsController(getWindow(), root).setAppearanceLightStatusBars(false);
@@ -116,6 +118,7 @@ public class MainActivity extends ComponentActivity {
                 return true;
             }
         });
+        applyNativeAppearance(getSharedPreferences("appearance", MODE_PRIVATE).getBoolean("light", false));
         if (savedInstanceState == null || webView.restoreState(savedInstanceState) == null)
             webView.loadUrl(START_URL);
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -137,6 +140,20 @@ public class MainActivity extends ComponentActivity {
     }
 
     private final class NoteBridge {
+        @JavascriptInterface public String getSystemAppearance() {
+            return (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                    == Configuration.UI_MODE_NIGHT_YES ? "dark" : "light";
+        }
+        @JavascriptInterface public void setAppearance(String theme) {
+            if (!"dark".equals(theme) && !"light".equals(theme)) return;
+            runOnUiThread(() -> {
+                String currentUrl = webView.getUrl();
+                if (currentUrl == null || !START_URL.equals(currentUrl.split("#", 2)[0])) return;
+                boolean light = "light".equals(theme);
+                getSharedPreferences("appearance", MODE_PRIVATE).edit().putBoolean("light", light).apply();
+                applyNativeAppearance(light);
+            });
+        }
         @JavascriptInterface public void openResource(String id) {
             if (id == null || !id.matches("[A-Za-z0-9_-]{1,100}")) return;
             runOnUiThread(() -> {
@@ -184,7 +201,19 @@ public class MainActivity extends ComponentActivity {
             }
         }
     }
+    private void applyNativeAppearance(boolean light) {
+        int background = light ? Color.rgb(245,245,247) : Color.rgb(8,9,11);
+        root.setBackgroundColor(background);
+        webView.setBackgroundColor(background);
+        WindowCompat.getInsetsController(getWindow(), root).setAppearanceLightStatusBars(light);
+        WindowCompat.getInsetsController(getWindow(), root).setAppearanceLightNavigationBars(light);
+    }
     private void showMessage(String message) { Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); }
+    @Override public void onConfigurationChanged(Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        if (webView != null) webView.evaluateJavascript(
+                "window.dispatchEvent(new Event('gatenova:system-appearance'))", null);
+    }
     @Override protected void onPause() { webView.onPause(); super.onPause(); }
     @Override protected void onResume() { super.onResume(); if (webView != null) webView.onResume(); }
     @Override protected void onDestroy() {

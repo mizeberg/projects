@@ -160,7 +160,7 @@ export function Empty({
   return (
     <div className="empty-state">
       <div className="empty-icon">{icon}</div>
-      <h3>{title}</h3>
+      <h2>{title}</h2>
       <p>{description}</p>
       {action}
     </div>
