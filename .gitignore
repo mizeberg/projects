@@ -32,3 +32,19 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+node_modules/
+dist/
+.data/
+.env
+*.tsbuildinfo
+
+# Generated Android assets and build output
+/dist-android/
+/android/app/src/main/assets/www/
+/android/.gradle/
+/android/local.properties
+**/signing.properties
+*.keystore
+
+*.p12

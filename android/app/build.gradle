@@ -1,0 +1,59 @@
+plugins { id 'com.android.application' }
+
+def signingFile = System.getenv('GATENOVA_SIGNING_PROPERTIES')
+def signingProperties = new Properties()
+if (signingFile) signingProperties.load(new FileInputStream(signingFile))
+
+android {
+    namespace 'io.gatenova.app'
+    compileSdk 36
+    buildFeatures { buildConfig true }
+    defaultConfig {
+        applicationId 'io.gatenova.app'
+        minSdk 26
+        targetSdk 36
+        versionCode 1
+        versionName '1.0.0'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+    signingConfigs {
+        if (signingFile) {
+            release {
+                storeFile file(signingProperties['storeFile'])
+                storePassword signingProperties['storePassword']
+                keyAlias signingProperties['keyAlias']
+                keyPassword signingProperties['keyPassword']
+            }
+        }
+    }
+    buildTypes {
+        release {
+            if (signingFile) signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug { applicationIdSuffix '.debug'; versionNameSuffix '-debug' }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    lint { abortOnError true; checkReleaseBuilds true }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.14.0'
+    implementation 'androidx.core:core:1.16.0'
+    implementation 'androidx.activity:activity:1.10.1'
+    testImplementation 'junit:junit:4.13.2'
+}
+
+// A release build must never fall back to debug or unsigned signing.
+tasks.configureEach { task ->
+    if (task.name in ['validateSigningRelease', 'packageRelease', 'packageReleaseBundle', 'assembleRelease', 'bundleRelease']) {
+        task.doFirst {
+            if (!signingFile) throw new GradleException('Set GATENOVA_SIGNING_PROPERTIES to a private signing configuration.')
+        }
+    }
+}
