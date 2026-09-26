@@ -1,1 +1,2 @@
 13fc59c53b2579dd16cce5c06d8bcd3ba2713e8d4c18dd6d496facd436fc518a  gatenova-1.0.0-android.apk
+e27854f1d2939f58a75560ab56e49714d90089b5b3551c43915b679d8c3cd724  gatenova-1.1.0-android.apk
