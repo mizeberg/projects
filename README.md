@@ -110,6 +110,21 @@ targetSdk 34) has been produced without Gradle by driving aapt2, kotlinc, d8 and
 apksigner directly — see `tools/build-apk.sh`. That path exists only because the
 Gradle/Maven hosts were unreachable in the build environment; use Gradle normally.
 
+## Testing this on a real phone
+
+The next step is physical-device validation. Everything needed is prepared:
+
+- [`REAL_DEVICE_TESTING.md`](REAL_DEVICE_TESTING.md) — enabling USB debugging, `adb`
+  commands, **how to point the app at your development server over the LAN** (the shipped
+  `10.0.2.2` only works in an emulator), and a crash-triage table.
+- [`docs/REAL_DEVICE_CHECKLIST.md`](docs/REAL_DEVICE_CHECKLIST.md) — the test pass itself.
+  Every box is unchecked; nothing is pre-filled.
+- `dist/BUILD_INFO.txt` — written next to each APK, stating version, build type, baked-in
+  API URL, signing status and that runtime is unvalidated.
+
+**John AI has passed build/static validation but has not yet passed physical-device
+runtime validation.**
+
 ## Build and verification status
 
 Legend: **VERIFIED** = actually executed here. **UNVERIFIED** = not tested, no claim made.

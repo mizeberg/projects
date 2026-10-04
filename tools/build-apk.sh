@@ -26,6 +26,10 @@
 # instead of plain d8 dexing.
 #   LIBS_DIR      directory of the runtime/compile jars (AndroidX, Compose,
 #                 kotlinx, okhttp, okio, kotlin-stdlib)
+#   DEBUG_RES_DIR optional extra res/ overlaid on app/src/main/res, the way AGP
+#                 merges app/src/debug/res for the debug build type. Set it to
+#                 app/src/debug/res to permit cleartext to a LAN server while
+#                 testing on a physical phone. NEVER set it for a release build.
 #   AAR_RES_DIR   directory of extracted AARs (one subdirectory per library,
 #                 each containing AndroidManifest.xml and res/). Libraries that
 #                 ship resources need their res/ linked and their own R class
@@ -68,6 +72,14 @@ echo "==> aapt2: compile app resources"
 "$AAPT2" compile --dir "$MAIN/res" -o "$WORK/flat/res.zip"
 
 FLATS=("$WORK/flat/res.zip")
+OVERLAY_ARGS=()
+if [ -n "${DEBUG_RES_DIR:-}" ]; then
+    echo "==> aapt2: overlaying debug resources from $DEBUG_RES_DIR (NOT for release)"
+    "$AAPT2" compile --dir "$DEBUG_RES_DIR" -o "$WORK/flat/debug-res.zip"
+    # -R marks it as an overlay so it REPLACES the matching main resource,
+    # which is how AGP merges app/src/debug/res over app/src/main/res.
+    OVERLAY_ARGS=(-R "$WORK/flat/debug-res.zip")
+fi
 EXTRA_PACKAGES=""
 if [ -n "${AAR_RES_DIR:-}" ]; then
     echo "==> aapt2: compile library resources from AARs"
@@ -91,6 +103,7 @@ echo "==> aapt2: link"
     --min-sdk-version 26 --target-sdk-version 34 \
     --auto-add-overlay \
     ${EXTRA_PACKAGES:+--extra-packages "$EXTRA_PACKAGES"} \
+    ${OVERLAY_ARGS:+"${OVERLAY_ARGS[@]}"} \
     "${FLATS[@]}"
 
 echo "==> generate the R and BuildConfig sources AGP would generate"
@@ -193,5 +206,23 @@ java -jar "$APKSIGNER_JAR" sign \
     --out "$OUT/$APK_NAME" "$WORK/unsigned.apk"
 java -jar "$APKSIGNER_JAR" verify --verbose --min-sdk-version 26 "$OUT/$APK_NAME"
 
+cat > "$OUT/BUILD_INFO.txt" <<EOF
+application:  John AI
+package:      com.johnai.app
+versionCode:  1
+versionName:  0.1.0
+artifact:     $APK_NAME ($(du -h "$OUT/$APK_NAME" | cut -f1))
+build:        $([ "${MINIFY:-0}" = "1" ] && echo "R8 minified" || echo "d8, not minified")
+api base url: $API_BASE_URL
+debug res:    ${DEBUG_RES_DIR:-none (shipped network security config: cleartext off)}
+signing:      debug / throwaway key - NOT release signing
+runtime:      NOT VALIDATED - no Android device or emulator was available
+built:        $(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+John AI has passed build/static validation but has not yet passed
+physical-device runtime validation.
+EOF
+
 echo
 echo "APK: $OUT/$APK_NAME  ($(du -h "$OUT/$APK_NAME" | cut -f1))"
+cat "$OUT/BUILD_INFO.txt"

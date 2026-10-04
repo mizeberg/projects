@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  DEBUG BUILDS ONLY. Gradle merges app/src/debug/res over app/src/main/res for the
+  debug build type, and tools/build-apk.sh only applies it when DEBUG_RES_DIR is set.
+  It is never present in a release artifact.
+
+  Why it exists: a physical test phone reaches the development server over the local
+  network at an address like http://192.168.1.42:8787. Android's network security
+  config matches by hostname and cannot express a CIDR range, so there is no way to
+  allow "the local network" in the shipped config without either hardcoding one
+  tester's IP or weakening the real app. Permitting cleartext in the debug overlay
+  keeps that concession entirely out of anything shippable.
+
+  Do not copy this file into app/src/main/res.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
