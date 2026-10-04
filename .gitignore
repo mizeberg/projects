@@ -37,5 +37,10 @@ google-services.json
 server/node_modules/
 server/data/
 
-# Build outputs (the APK is produced by tools/build-apk.sh, not committed)
-dist/
+# Build outputs (produced by tools/build-apk.sh)
+dist/*
+# ...except the testing package, which is committed so it can be downloaded
+# directly without a build environment. Signing keys, the R8 mapping file and
+# the other build variants stay out of the repository.
+!dist/john-ai.apk
+!dist/JOHN_AI_TESTING.zip

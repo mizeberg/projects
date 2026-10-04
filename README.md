@@ -110,9 +110,20 @@ targetSdk 34) has been produced without Gradle by driving aapt2, kotlinc, d8 and
 apksigner directly — see `tools/build-apk.sh`. That path exists only because the
 Gradle/Maven hosts were unreachable in the build environment; use Gradle normally.
 
-## Testing this on a real phone
+## Install it on your phone
 
-The next step is physical-device validation. Everything needed is prepared:
+**[`dist/john-ai.apk`](dist/john-ai.apk)** — 1.3 MB, R8 minified, signed, ready to
+sideload. No build environment, no cables, no developer tools needed. Follow
+**[`MANUAL_TEST_GUIDE.md`](MANUAL_TEST_GUIDE.md)**; `dist/JOHN_AI_TESTING.zip` is the same
+APK bundled with its guide and `README_TESTING.md`.
+
+Note that the backend is a separate server you run yourself, so without it you can test
+installation, launch and the sign-in screen — the app should show a readable offline
+message rather than crash. See the guide.
+
+## Testing with a development server and adb
+
+For the deeper pass, once a backend is reachable:
 
 - [`REAL_DEVICE_TESTING.md`](REAL_DEVICE_TESTING.md) — enabling USB debugging, `adb`
   commands, **how to point the app at your development server over the LAN** (the shipped
