@@ -4,6 +4,31 @@ No computer, no cables, no developer tools. Download one file, install it, open 
 
 ---
 
+## If you tested the previous APK and it did not run
+
+That was a real bug and it is now fixed: Okio was missing from the app, OkHttp needs it,
+and the HTTP client is built during startup — so the app died before drawing anything.
+Root cause and evidence: `docs/LAUNCH_FAILURE_2026-10-04.md`.
+
+**Candidate fix — it still needs your confirmation on a real phone**, because there is no
+Android device in the environment where it was built.
+
+Please install **`dist/john-ai.apk`** (rebuilt, 1.2 MB) and tell me which happens:
+
+**TEST A — `john-ai.apk`**
+- **A.** Installs and launches
+- **B.** Installs but immediately closes
+- **C.** Android says it cannot be installed
+- **D.** Icon appears but tapping does nothing
+- **E.** Android shows a crash message
+- **F.** Something else
+
+If TEST A is anything other than A, install **`dist/john-ai-runtime-debug.apk`** (9.9 MB,
+same code with no shrinking) and report the same A–F for **TEST B**. The difference
+between the two tells us immediately whether R8 is involved.
+
+---
+
 ## ⚠️ Read this first — how far you can get
 
 John AI keeps a pastor's sermons, prayers and notes on a **backend server** that you run.

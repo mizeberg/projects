@@ -35,12 +35,14 @@
 # so the JSON contract with the backend does not silently break.
 -keep @kotlinx.serialization.Serializable class com.johnai.app.data.** { *; }
 
-# ---------------------------------------------------------------- OkHttp
--dontwarn okhttp3.**
--dontwarn okio.**
--dontwarn org.conscrypt.**
--dontwarn org.bouncycastle.**
--dontwarn org.openjsse.**
+# ------------------------------------------------------------------- HTTP
+# John AI uses the platform HttpURLConnection, so there is no OkHttp/Okio to keep.
+#
+# There used to be "-dontwarn okhttp3.**" and "-dontwarn okio.**" here. Those rules
+# suppressed R8's "Missing class okio.*" errors, which let a build ship with Okio
+# absent from the dex; OkHttpClient is constructed in Application.onCreate, so the
+# app died with NoClassDefFoundError before drawing a frame. Never silence a
+# -dontwarn for a library the app actually calls.
 
 # ------------------------------------------------------------ Coroutines
 -dontwarn kotlinx.coroutines.**

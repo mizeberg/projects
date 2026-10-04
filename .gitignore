@@ -44,3 +44,4 @@ dist/*
 # the other build variants stay out of the repository.
 !dist/john-ai.apk
 !dist/JOHN_AI_TESTING.zip
+!dist/john-ai-runtime-debug.apk

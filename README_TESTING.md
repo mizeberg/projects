@@ -1,49 +1,51 @@
 # John AI — test build
 
+> **Fixes the launch crash reported on 2026-10-04.** The previously shipped APK
+> (SHA-256 `7fc17c14…`) could not start on any device: Okio was missing from the dex and
+> OkHttp needs it, and the HTTP client is constructed in `Application.onCreate`, so the
+> process died with `NoClassDefFoundError` before the first frame. Details in
+> `docs/LAUNCH_FAILURE_2026-10-04.md`.
+>
+> **Candidate fix — requires physical-device confirmation.** I still have no Android
+> device or emulator, so this has not been launched anywhere.
+
 | | |
 | --- | --- |
 | **Application** | John AI |
 | **Package** | com.johnai.app |
 | **Version** | 0.1.0 (versionCode 1) |
 | **Build** | R8 minified |
-| **APK size** | 1.3M (1293885 bytes) |
-| **SHA-256** | `7fc17c143dd49419c2451be7b18576f4d0823943f3987e1387a96a725f4903b9` |
+| **APK size** | 1,220,158 bytes |
+| **SHA-256** | `f514381a04258b73294727a195d3c71435f41252b0f89495852df7490e94c356` |
 | **Minimum Android** | 8.0 (API 26) |
-| **Target Android** | 14 (API 34) |
 | **Permissions** | INTERNET only |
-| **Signing** | Throwaway debug key, v1 + v2 + v3 — suitable for manual sideload testing; production release signing is still pending |
-| **Runtime validation** | Not performed in the build environment (no Android device or emulator was available) |
-| **User testing** | Required |
+| **Signing** | Throwaway debug key, v1 + v2 + v3 — manual sideload testing only; production release signing is still pending |
+| **Runtime validation** | Not performed in the build environment |
 
-## Offline verification performed on this exact file
+## Fallback build
 
-| Check | Result |
-| --- | --- |
-| `apksigner verify` | Verifies — v1 true (at min-sdk 21), v2 true, v3 true, 1 signer |
-| `aapt2 dump badging` | package com.johnai.app, versionCode 1, versionName 0.1.0, label "John AI", launchable activity com.johnai.app.MainActivity |
-| Permissions | android.permission.INTERNET only |
-| Native libraries | none |
-| Debuggable flag | not set |
-| Zip integrity | `unzip -t` — no errors, 85 entries |
-| resources.arsc | stored uncompressed and 4-byte aligned, as required for targetSdk 30+ |
-| Resource table | attr/color/dimen/drawable/id/integer/layout/mipmap/string/style/xml all present |
-| R8 output | all references resolved; Compose UI and runtime, Material3, Lifecycle, Navigation, kotlinx.serialization, OkHttp and all John AI classes confirmed present in the dex via mapping.txt |
-| Startup path | reviewed in source: no network call before the sign-in screen, HTTP confined to Dispatchers.IO, connection failures surfaced as a readable error with retry |
-| Debug-only code | none found — no development logging, debug menus, test buttons or fake data |
+`john-ai-runtime-debug.apk` — 10,301,046 bytes, SHA-256 `5c7233e8f1d2954c56f0b2f25f24c94800f5ac4c54db4d23ace3179012a2cd14`. Same source, **no R8**,
+so stack traces are readable and nothing is shrunk. Install this one if the main APK still
+fails; it tells us whether R8 is involved.
+
+## Offline verification of these files
+
+| Check | john-ai.apk | john-ai-runtime-debug.apk |
+| --- | --- | --- |
+| `tools/verify-apk.py` (every referenced class present) | **PASS** — 3,175 classes, all references resolve | 4 unreachable library references (see below) |
+| `apksigner verify` | v1 + v2 + v3 | v2 |
+| Package / version / launcher | com.johnai.app, 0.1.0, MainActivity | same |
+| Permissions | INTERNET only | INTERNET only |
+| Okio / OkHttp references | none — dependency removed | none |
+
+The non-minified build still references `ProcessLifecycleInitializer`,
+`ResolvableFuture`, `ListenableFuture` and `androidx.startup.R$string`. These are reached
+only through `androidx.startup.InitializationProvider`, which this APK does not declare,
+so they are never loaded. R8 removes them entirely, which is why the shipped build is clean.
 
 ## What is NOT claimed
 
-Not tested on Android. Not launch-verified. Not runtime-verified. Not crash-free. No
-performance measurement. **John AI has passed build and static verification but has not
-yet passed physical-device runtime validation.**
+Not tested on Android. Not launch-verified. Not crash-free. **John AI has passed build and
+static verification but has not yet passed physical-device runtime validation.**
 
-## Backend
-
-The app talks to a John AI server that you run yourself; this APK contains only the phone
-client. Its built-in address is `http://10.0.2.2:8787`, which is an Android *emulator*
-alias and is deliberately not a real machine on your network — no LAN IP has been
-hardcoded. Without a reachable server you can test installation, launch and the sign-in
-screen; the app is expected to show a readable "offline" message rather than crash or hang.
-Connecting a real server is described in REAL_DEVICE_TESTING.md.
-
-See MANUAL_TEST_GUIDE.md for installation steps and the test checklist.
+See MANUAL_TEST_GUIDE.md for installation steps.
