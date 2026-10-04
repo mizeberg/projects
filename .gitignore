@@ -36,3 +36,6 @@ google-services.json
 # John AI server
 server/node_modules/
 server/data/
+
+# Build outputs (the APK is produced by tools/build-apk.sh, not committed)
+dist/

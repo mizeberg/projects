@@ -123,14 +123,14 @@ fun SermonEditorScreen(sermonId: String) {
                         minLines = 2,
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
-                        GlassButton("Remove") {
+                        GlassButton("Remove", {
                             sections.removeAt(index)
                             dirty = true
-                        }
-                        GlassButton("Ask John") {
+                        })
+                        GlassButton("Ask John", {
                             AiFocus.set("sermon", sermonId, "This sermon", screen = "sermon-editor")
                             nav.navigate(Routes.AI)
-                        }
+                        })
                     }
                 }
             }
@@ -142,7 +142,7 @@ fun SermonEditorScreen(sermonId: String) {
                     Text("ADD SECTION", style = MaterialTheme.typography.labelSmall, color = colors.tertiary)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
                         SECTION_KINDS.forEach { kind ->
-                            GlassButton(kind.replaceFirstChar { it.uppercase() }) {
+                            GlassButton(kind.replaceFirstChar { it.uppercase() }, {
                                 sections.add(
                                     SermonSection(
                                         id = UUID.randomUUID().toString(),
@@ -152,7 +152,7 @@ fun SermonEditorScreen(sermonId: String) {
                                     )
                                 )
                                 dirty = true
-                            }
+                            })
                         }
                     }
                 }

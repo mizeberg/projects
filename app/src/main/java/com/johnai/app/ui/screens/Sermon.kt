@@ -167,12 +167,12 @@ fun SermonScreen(sermonId: String) {
         }
 
         item {
-            GlassButton("Ask John about this sermon") {
+            GlassButton("Ask John about this sermon", {
                 // Smart context switching: the entity you are looking at becomes
                 // John's context — scoped to this sermon and nothing else.
                 AiFocus.set(entityType = "sermon", entityId = sermonId, label = "This sermon")
                 nav.navigate(Routes.AI)
-            }
+            })
         }
     }
 }

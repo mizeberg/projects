@@ -226,10 +226,10 @@ fun FocusModeScreen(sermonId: String) {
             )
 
             Row(horizontalArrangement = Arrangement.spacedBy(Space.xs)) {
-                GlassButton("Ask John") {
+                GlassButton("Ask John", {
                     AiFocus.set("sermon", sermonId, "This sermon", screen = "focus")
                     nav.navigate(Routes.AI)
-                }
+                })
                 GlassButton("Exit focus", { nav.popBackStack() })
             }
         }

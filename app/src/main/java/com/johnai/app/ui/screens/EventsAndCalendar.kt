@@ -286,10 +286,10 @@ fun EventScreen(eventId: String) {
         }
 
         item {
-            GlassButton("Ask John about this event") {
+            GlassButton("Ask John about this event", {
                 AiFocus.set("event", eventId, "This event")
                 nav.navigate(Routes.AI)
-            }
+            })
         }
     }
 }

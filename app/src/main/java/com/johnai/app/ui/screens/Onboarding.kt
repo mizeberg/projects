@@ -38,7 +38,7 @@ import com.johnai.app.ui.theme.Space
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import kotlinx.serialization.json.addJsonArray
+import kotlinx.serialization.json.putJsonArray
 import kotlinx.serialization.json.add
 
 private val ROLES = listOf(
@@ -99,8 +99,8 @@ fun OnboardingScreen() {
                         put("role", role)
                         put("sermonWorkflow", workflow)
                         put("timeZone", java.util.TimeZone.getDefault().id)
-                        addJsonArray("bibleTranslations") { translations.forEach { add(it) } }
-                        addJsonArray("ministryAreas") { areas.forEach { add(it) } }
+                        putJsonArray("bibleTranslations") { translations.forEach { add(it) } }
+                        putJsonArray("ministryAreas") { areas.forEach { add(it) } }
                         put("onboardingComplete", true)
                     }
                 )
