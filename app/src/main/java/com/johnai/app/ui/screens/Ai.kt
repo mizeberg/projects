@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -257,12 +256,9 @@ fun AiScreen() {
                 modifier = Modifier.weight(1f),
                 maxLines = 4,
             )
-            IconButton(
-                onClick = { orb = if (orb == OrbState.Listening) OrbState.Idle else OrbState.Listening },
-                modifier = Modifier.size(Touch.preferred),
-            ) {
-                Icon(Icons.Filled.Mic, contentDescription = "Voice input", tint = colors.secondary)
-            }
+            // No microphone button: speech capture is not implemented, and a control
+            // that only animates an orb would be a dead button. The RECORD_AUDIO
+            // permission was removed from the manifest for the same reason.
             IconButton(
                 onClick = { ask(input.trim()) },
                 enabled = input.isNotBlank(),

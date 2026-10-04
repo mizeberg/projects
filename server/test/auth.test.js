@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { harness } from './helpers.js';
+import { signToken, verifyToken } from '../src/core.js';
 
 test('registration, login and session', async (t) => {
   const h = harness(); t.after(() => h.close());
@@ -52,4 +53,24 @@ test('onboarding personalization persists and is never invented', async (t) => {
   assert.deepEqual(updated.body.bibleTranslations, ['ESV', 'Telugu BSI']);
   assert.equal(updated.body.onboardingComplete, true);
   assert.ok(updated.body.churchId);
+});
+
+test('production refuses to sign tokens with the public development key', async (t) => {
+  const prevEnv = process.env.NODE_ENV;
+  const prevSecret = process.env.JOHN_JWT_SECRET;
+  t.after(() => {
+    if (prevEnv === undefined) delete process.env.NODE_ENV; else process.env.NODE_ENV = prevEnv;
+    if (prevSecret === undefined) delete process.env.JOHN_JWT_SECRET; else process.env.JOHN_JWT_SECRET = prevSecret;
+  });
+
+  process.env.NODE_ENV = 'production';
+  delete process.env.JOHN_JWT_SECRET;
+  assert.throws(() => signToken({ sub: 'u1' }), /JOHN_JWT_SECRET must be set/);
+
+  process.env.JOHN_JWT_SECRET = 'john-ai-dev-secret-change-me';
+  assert.throws(() => signToken({ sub: 'u1' }), /JOHN_JWT_SECRET must be set/);
+
+  process.env.JOHN_JWT_SECRET = 'a-real-private-production-secret';
+  const token = signToken({ sub: 'u1' });
+  assert.equal(verifyToken(token).sub, 'u1');
 });

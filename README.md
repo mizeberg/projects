@@ -110,29 +110,67 @@ targetSdk 34) has been produced without Gradle by driving aapt2, kotlinc, d8 and
 apksigner directly — see `tools/build-apk.sh`. That path exists only because the
 Gradle/Maven hosts were unreachable in the build environment; use Gradle normally.
 
-## What has actually been verified
+## Build and verification status
 
-The build environment can reach npm and PyPI but not `dl.google.com`,
-`maven.google.com`, `repo1.maven.org` or `services.gradle.org`. A complete toolchain was
-therefore assembled from the hosts that do answer: a JDK 21 runtime from the PyPI `jdk4py`
-wheel, `kotlinc` 2.0.0 from npm, a Linux `aapt2` from npm, and the AndroidX/Compose jars,
-`android.jar`, `d8.jar` and `apksigner.jar` from public GitHub repositories via the GitHub
-blobs API. With that in place the app was genuinely compiled and packaged:
+Legend: **VERIFIED** = actually executed here. **UNVERIFIED** = not tested, no claim made.
 
-| Verified | How |
-| --- | --- |
-| Server, all behaviour | `npm test` — 12/12 pass, plus a full live pastor flow against a running instance |
-| **The whole Compose UI type-checks** | `kotlinc` with the Compose compiler plugin and the real AndroidX classpath: 0 errors, 565 class files |
-| **A signed APK installs** | aapt2 → kotlinc → d8 → apksigner; `apksigner verify` passes (v2 + v3), `aapt2 dump badging` reports package `com.johnai.app`, label `John AI`, launchable activity `MainActivity` |
-| Data layer | Compiled against a probe exercising the exact field access the screens use |
-| `ui/glass/Reflection.kt` scroll physics | Compiled **and executed**: idle 3%, slow scroll inside the 2–12% band, fast scroll capped at 17%, decay to idle in 43 frames, travel wraps in 0..1, reduced motion disables everything |
-| `navigation/Routes.kt` | Compiled **and executed**: entity routes, filter stripping, singular→list fallback, unknown route falls back to `work` |
+| Area | Status | Evidence |
+| --- | --- | --- |
+| Server behaviour | **VERIFIED** | `npm test` — 13/13, plus a live end-to-end pastor flow |
+| Compose UI type-checks | **VERIFIED** | kotlinc 2.0.0 + Compose plugin + real AndroidX classpath, 0 errors |
+| Resource compile/link | **VERIFIED** | aapt2 compile + link, app and library resources |
+| Dexing | **VERIFIED** | d8 (debug) and R8 (minified) both succeed |
+| R8 shrinking | **VERIFIED** | 10 MB → **1.3 MB**; R8 resolved every reference; `mapping.txt` emitted |
+| APK signature | **VERIFIED** | `apksigner verify` passes v2 + v3 |
+| APK contents | **VERIFIED** | package `com.johnai.app`, label `John AI`, launchable `MainActivity`, one permission (INTERNET), no native libs, not debuggable |
+| Reflection physics | **VERIFIED** | compiled and executed, 12/12 behavioural checks |
+| Route resolution | **VERIFIED** | compiled and executed, 8/8 checks |
+| Install on a device | **UNVERIFIED** | no adb, no emulator, no `/dev/kvm` in this environment |
+| Launch / splash / onboarding / auth / home | **UNVERIFIED** | requires a device |
+| Any user journey, button, dialog or keyboard behaviour | **UNVERIFIED** | requires a device |
+| Frame rate and scroll performance | **UNVERIFIED** | requires a device |
+| Dark/light rendering, accessibility, responsive layout | **UNVERIFIED** | requires a device |
+| Release signing | **UNVERIFIED** | both APKs are signed with a throwaway debug key |
 
-Three real defects were found by the compiler and fixed: six `GlassButton` calls used
-trailing-lambda syntax against a signature whose last parameter is not the lambda, and two
-`addJsonArray` calls in onboarding should have been `putJsonArray` on a `JsonObjectBuilder`.
+### What static analysis caught that compilation did not
 
-Caveats on the APK: it is a debug build signed with a throwaway key, it was linked against
-Compose 1.6/Material3 from the recovered jars rather than the BOM pinned in
-`gradle/libs.versions.toml`, and it is not shrunk by R8, so the bundled extended icon set
-makes it ~11 MB. Build with Gradle for a release artifact.
+R8's reference checking found two defects that `d8` silently accepted, both of
+which would have crashed the app at startup:
+
+- `androidx.arch.core` (`ArchTaskExecutor`, `SafeIterableMap`) was missing from the
+  packaged classpath — `LifecycleRegistry` needs it on every lifecycle transition.
+- The per-library `R` classes (`androidx.core.R$id`, `androidx.lifecycle.runtime.R$id`,
+  `androidx.customview.poolingcontainer.R$id`) did not exist, because only the AARs'
+  `classes.jar` had been packaged, not their resources. `ViewTreeLifecycleOwner` reads
+  those ids in a static initialiser. The build now links library resources and emits an
+  `R` class per package, exactly as AGP does.
+
+Two further defects were found by inspection and fixed:
+
+- **The app could not have reached its backend at all.** The client talks to
+  `http://10.0.2.2:8787`, but cleartext HTTP is blocked by default from targetSdk 28 and
+  no network security config existed. `res/xml/network_security_config.xml` now permits
+  cleartext for loopback and private addresses only; public hosts must still be HTTPS.
+- `RECORD_AUDIO` and `POST_NOTIFICATIONS` were declared but nothing used them, and the
+  microphone button only toggled an animation. The permissions and the dead button are gone.
+
+### Known differences from the authoritative Gradle build
+
+`gradle/libs.versions.toml` remains the source of truth. The Gradle-free pipeline in
+`tools/build-apk.sh` differs from it and the APKs here reflect the pipeline, not the catalog:
+
+| | Gradle catalog | This pipeline |
+| --- | --- | --- |
+| Kotlin | 2.0.20 | 2.0.0 (the newest plugin jar obtainable here) |
+| Compose | BOM 2024.09.03 | the 1.6.x artifacts recovered from public caches |
+| AGP | 8.5.2 | not used; aapt2/d8/r8/apksigner driven directly |
+| Signing | release config | throwaway debug key |
+
+No project version was changed to accommodate the pipeline. The source compiles under
+both. Build with Gradle for anything shipped.
+
+### Not implemented
+
+Voice capture, notifications and deep links are not implemented, and there is no UI that
+claims them. The AI answers only from stored records; no language model is configured, and
+no model API key exists anywhere in the client.

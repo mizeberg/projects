@@ -22,7 +22,27 @@ export function verifyPassword(password, stored) {
 
 /* ---------------- tokens (HS256 JWT) ---------------- */
 const b64 = (buf) => Buffer.from(buf).toString('base64url');
-const secret = () => process.env.JOHN_JWT_SECRET ?? 'john-ai-dev-secret-change-me';
+const DEV_SECRET = 'john-ai-dev-secret-change-me';
+
+/**
+ * Token signing key.
+ *
+ * In production a missing JOHN_JWT_SECRET is fatal rather than silently falling
+ * back to a value that is published in this repository: with the dev key an
+ * attacker could mint a token for any pastor's account and read their sermons,
+ * prayer requests and finances.
+ */
+const secret = () => {
+  const configured = process.env.JOHN_JWT_SECRET;
+  if (configured && configured !== DEV_SECRET) return configured;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'JOHN_JWT_SECRET must be set to a private value in production. ' +
+        'Refusing to sign tokens with the public development key.',
+    );
+  }
+  return DEV_SECRET;
+};
 
 export function signToken(payload, ttlSeconds = 60 * 60 * 24 * 30) {
   const header = b64(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
