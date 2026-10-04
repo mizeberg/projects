@@ -23,7 +23,12 @@ npm test           # 12 tests, including data-isolation and confirmation guarant
 
 ## Build the app
 
+Open the project in Android Studio (Koala or newer), or build from the command line.
+The wrapper's binary `gradle-wrapper.jar` is not committed, so generate it once with a
+local Gradle 8.9+ — the pinned version is already in `gradle/wrapper/gradle-wrapper.properties`:
+
 ```bash
+gradle wrapper                 # one time only; creates gradlew + gradle-wrapper.jar
 ./gradlew :app:assembleDebug
 # point the client at a backend other than the emulator default:
 ./gradlew :app:assembleDebug -PjohnApiBaseUrl=http://192.168.1.20:8787
@@ -100,6 +105,20 @@ Not yet built — deliberately absent rather than faked:
 
 There are no "Coming soon" buttons for these — the screens simply do not claim them.
 
-> **Note on verification:** this sandbox has no JDK or Android SDK, so the server was built,
-> run and tested here, and the Compose client is reviewed source that has not been through
-> a compiler. Expect to fix a small number of import-level issues on first build.
+## What has actually been verified
+
+The build environment can reach npm and PyPI but not `dl.google.com`, `maven.google.com`,
+`repo1.maven.org` or `services.gradle.org`, so no Android SDK, AndroidX/Compose artifact or
+Gradle distribution could be fetched and **no APK has been produced here**. A JVM and
+`kotlinc` 2.0.21 were assembled from npm/PyPI, which allowed this much:
+
+| Verified | How |
+| --- | --- |
+| Server, all behaviour | `npm test` — 12/12 pass, plus a full live pastor flow against a running instance |
+| Every Kotlin source file parses | `kotlinc` frontend over all 34 files: zero syntax errors |
+| `data/Models.kt`, whole data layer | Compiled for real (61 classes) together with a probe exercising the exact field access the screens use |
+| `ui/glass/Reflection.kt` scroll physics | Compiled **and executed**: idle 3%, slow scroll inside the 2–12% band, fast scroll capped at 17% (never past the 18% ceiling), decay back to idle in 43 frames, travel wraps in 0..1, reduced motion disables everything, nested scroll observes without consuming |
+| `navigation/Routes.kt` | Compiled **and executed**: entity routes, filter stripping, singular→list fallback, unknown route falls back safely to `work` |
+
+Not verified: type-checking of the Compose UI itself, which needs the AndroidX classpath.
+Expect to fix a small number of import-level issues on first build in Android Studio.

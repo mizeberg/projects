@@ -82,8 +82,9 @@ fun SermonEditorScreen(sermonId: String) {
 
     JohnScreen(
         title = title.ifBlank { "Sermon" },
-        subtitle = when {
-            error != null -> error
+        // Read the delegated state into a local first: the save status is one
+        // value, and the editor must never claim "saved" while an error stands.
+        subtitle = error ?: when {
             dirty -> "Saving…"
             savedAt != null -> "All changes saved"
             else -> null
