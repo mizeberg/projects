@@ -98,7 +98,7 @@ Not yet built — deliberately absent rather than faked:
 
 - Documents, OCR and document intelligence
 - Bible text integration (needs licensed sources; no translation is embedded)
-- Voice capture (the mic control is present but transcription is not wired)
+- Voice capture (no mic control is shown and RECORD_AUDIO is not requested)
 - Push notifications, offline sync and conflict resolution
 - People records, pastoral-care timeline, announcements, research workspace, templates
 - Tablet multi-column layout
@@ -154,6 +154,22 @@ Two further defects were found by inspection and fixed:
 - `RECORD_AUDIO` and `POST_NOTIFICATIONS` were declared but nothing used them, and the
   microphone button only toggled an animation. The permissions and the dead button are gone.
 
+### Static audits (no device required)
+
+| Audit | Result |
+| --- | --- |
+| Interactive handlers (`onClick`, `clickable`, `GlassButton`, `onValueChange`, `onCheckedChange`) | 93 found, **0 empty** — no dead controls |
+| Navigation graph | 23 registered routes; all 6 route builders map to a registered pattern; **0 route constants used but unregistered** |
+| Unknown-route safety | `Routes.resolve` falls back to `work`, proven by an executed test |
+| Secrets inside the shipped APK | **0** — strings scanned for API_KEY/SECRET/TOKEN/PASSWORD/PRIVATE_KEY/JWT/SERVICE_ACCOUNT; every hit is a framework identifier. Only URLs present are the dev base URL and a Compose library link |
+| Permissions in the APK | INTERNET only; no native libraries; not debuggable |
+| R8 output integrity | Compose runtime, `AndroidComposeView`, Material3, `LifecycleRegistry`, `ArchTaskExecutor`, OkHttp, kotlinx Json and all John AI classes confirmed present via `mapping.txt` → dex lookup; 3,330 classes retained |
+
+On APK size: 1.3 MB is legitimate. The bulk of the unminified 11 MB was
+`material-icons-extended`, of which the app uses four icons. The `androidx.*.R$id`
+classes are absent from the minified dex because R8 inlines their `int` constants —
+that is correct behaviour, not a missing dependency.
+
 ### Known differences from the authoritative Gradle build
 
 `gradle/libs.versions.toml` remains the source of truth. The Gradle-free pipeline in
@@ -166,11 +182,29 @@ Two further defects were found by inspection and fixed:
 | AGP | 8.5.2 | not used; aapt2/d8/r8/apksigner driven directly |
 | Signing | release config | throwaway debug key |
 
-No project version was changed to accommodate the pipeline. The source compiles under
-both. Build with Gradle for anything shipped.
+No project version was changed to accommodate the pipeline.
+
+**Can the divergence be closed?** Partly, and not usefully. Kotlin 2.0.20 (the catalog
+version) *is* published on npm, but the Compose compiler plugin is versioned in lockstep
+with Kotlin since 2.0, and no `kotlin-compose-compiler-plugin-embeddable-2.0.20` jar could
+be located through any reachable host — so moving the compiler to 2.0.20 would leave it
+without a matching Compose plugin and break the build. The pipeline is therefore kept
+internally consistent at Kotlin 2.0.0 + its matching plugin + Compose 1.6.x runtime, all
+packaged together into the same APK.
+
+**Is that combination a compatibility risk?** For the artifact in `dist/`, no: the compiler,
+plugin and runtime it was built and packaged with are mutually consistent, and R8 resolved
+every reference across the whole closure. What is *not* verified is the catalog combination
+(Kotlin 2.0.20 + Compose BOM 2024.09.03), because those artifacts cannot be fetched here.
+Build with Gradle for anything shipped.
 
 ### Not implemented
 
 Voice capture, notifications and deep links are not implemented, and there is no UI that
 claims them. The AI answers only from stored records; no language model is configured, and
-no model API key exists anywhere in the client.
+no model API key exists anywhere in the client — the AI screen states this to the user
+("John answers from what you have stored").
+
+**Localization is not implemented.** Only `app_name` and `brand_tagline` are read from
+`strings.xml`; every other screen renders hardcoded English. The remaining entries in
+`strings.xml` are a starting point for that work, not evidence of it.

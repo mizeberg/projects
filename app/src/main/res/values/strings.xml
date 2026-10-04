@@ -1,6 +1,8 @@
 <resources>
-    <!-- All user-facing copy lives here so John AI can be localized
-         (Telugu, Hindi, Tamil, Malayalam, Kannada ...) without touching UI code. -->
+    <!-- NOTE: only app_name and brand_tagline are currently read from here. The rest of
+         the UI renders hardcoded English literals, so John AI is NOT yet localizable.
+         These entries are the starting point for that work, not evidence it is done.
+         Migrating the screens to stringResource() is tracked as outstanding work. -->
     <string name="app_name">John AI</string>
     <string name="brand_tagline">Your ministry. Organized around you.</string>
 
@@ -43,7 +45,6 @@
     <string name="clear_context">Clear context</string>
     <string name="view_sources">View sources</string>
     <string name="send">Send</string>
-    <string name="voice">Voice</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="undo">Undo</string>
