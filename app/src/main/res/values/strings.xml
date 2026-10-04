@@ -1,0 +1,56 @@
+<resources>
+    <!-- All user-facing copy lives here so John AI can be localized
+         (Telugu, Hindi, Tamil, Malayalam, Kannada ...) without touching UI code. -->
+    <string name="app_name">John AI</string>
+    <string name="brand_tagline">Your ministry. Organized around you.</string>
+
+    <!-- auth -->
+    <string name="sign_in">Sign in</string>
+    <string name="create_account">Create account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_out">Sign out</string>
+
+    <!-- navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_work">Work</string>
+    <string name="nav_ai">John</string>
+    <string name="nav_progress">Progress</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- home -->
+    <string name="ministry_pulse">Ministry Pulse</string>
+    <string name="pulse_subtitle">Here\'s what needs your attention.</string>
+    <string name="today">Today</string>
+    <string name="continue_label">Continue</string>
+    <string name="ministry_inbox">Ministry Inbox</string>
+    <string name="action_required">Action required</string>
+    <string name="information">Information</string>
+    <string name="why_am_i_seeing_this">Why am I seeing this?</string>
+
+    <!-- sermons -->
+    <string name="sermons">Sermons</string>
+    <string name="sermon_intelligence">Sermon Intelligence</string>
+    <string name="preparation">Preparation</string>
+    <string name="preach_mode">Preach mode</string>
+    <string name="focus_mode">Focus mode</string>
+    <string name="john_noticed">John noticed</string>
+
+    <!-- ai -->
+    <string name="ask_john">Ask John</string>
+    <string name="ask_john_anything">Ask John anything…</string>
+    <string name="ai_context">AI context</string>
+    <string name="clear_context">Clear context</string>
+    <string name="view_sources">View sources</string>
+    <string name="send">Send</string>
+    <string name="voice">Voice</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="undo">Undo</string>
+    <string name="retry">Retry</string>
+
+    <!-- generic -->
+    <string name="search_placeholder">Search sermons, notes, events, documents…</string>
+    <string name="quick_actions">Quick actions</string>
+    <string name="trust_center">Trust Center</string>
+</resources>

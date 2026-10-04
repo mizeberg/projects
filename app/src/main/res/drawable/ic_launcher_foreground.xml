@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- An abstract J: a descending stroke of light turning into connection.
+     Deliberately not a literal cross — the identity is light and knowledge. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <path
+        android:pathData="M66,30 L66,60 A14,14 0 0 1 38,60"
+        android:strokeWidth="9"
+        android:strokeLineCap="round"
+        android:strokeColor="#FFFFFF" />
+    <path
+        android:pathData="M66,30 L66,60 A14,14 0 0 1 38,60"
+        android:strokeWidth="9"
+        android:strokeLineCap="round"
+        android:strokeColor="#668B5CF6" />
+    <path
+        android:pathData="M52,30 L80,30"
+        android:strokeWidth="9"
+        android:strokeLineCap="round"
+        android:strokeColor="#FFFFFF" />
+    <path
+        android:pathData="M38,78 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0"
+        android:fillColor="#FFA78BFA" />
+</vector>

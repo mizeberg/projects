@@ -1,0 +1,14 @@
+{
+  "name": "john-ai-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "John AI backend — auth, ministry data, and the server-side AI gateway/tool registry.",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "engines": { "node": ">=22.5" },
+  "dependencies": { "express": "^4.21.2" }
+}
