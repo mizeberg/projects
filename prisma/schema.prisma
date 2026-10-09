@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  name          String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  isPremium     Boolean  @default(false)
+  stripeCustomerId String?
+  subscriptionStatus String? // active, canceled, past_due
+  subscriptionEndsAt DateTime?
+  results       Result[]
+  quests        QuestCompletion[]
+  streak        Int      @default(0)
+  lastQuestDate DateTime?
+  interests     String? // JSON array
+}
+
+model Experience {
+  id          String @id @default(cuid())
+  slug        String @unique
+  title       String
+  description String
+  category    String // Think, Create, Discover, Solve, Imagine, Challenge
+  difficulty  String?
+  estMinutes  Int?
+  isPremium   Boolean @default(false)
+  trendingScore Int @default(0)
+  createdAt   DateTime @default(now())
+  data        String // JSON
+}
+
+model Result {
+  id           String   @id @default(cuid())
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  experienceId String?
+  experience   Experience? @relation(fields: [experienceId], references: [id])
+  type         String // personality, mystery, whatif, creative, quest
+  title        String
+  summary      String
+  data         String // JSON
+  shareId      String   @unique @default(cuid())
+  createdAt    DateTime @default(now())
+  isPublic     Boolean  @default(true)
+}
+
+model QuestCompletion {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      String // YYYY-MM-DD
+  data      String // JSON
+  createdAt DateTime @default(now())
+  @@unique([userId, date])
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  event     String
+  experienceId String?
+  userId    String?
+  meta      String?
+  createdAt DateTime @default(now())
+}
+
+model ShareView {
+  id        String   @id @default(cuid())
+  shareId   String
+  createdAt DateTime @default(now())
+}
